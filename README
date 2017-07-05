@@ -1,0 +1,7 @@
+Usage of ./shark-hexdump:
+  -addr string
+    	listen address (default "127.0.0.1:5000")
+  -facts string
+    	path to facts file (default "./facts.txt")
+  -template string
+    	path to template file (default "./index.html")
