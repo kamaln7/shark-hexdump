@@ -3,20 +3,32 @@
 <title>hexdump</title>
 <style>
 body {
-	background: #000;
+    background: #000;
     padding-top: 50px;
     text-align: center;
+    color: #fff;
+    font-family: sans-serif;
 }
 
 pre {
     display: inline-block;
     text-align: left;
-	font-family: monospace;
-	font-size: 1.5em;
-	color: #fff;
+    font-family: monospace;
+    font-size: 1.5em;
+    margin: 0;
+}
+
+p {
+    line-height: 1.5em;
+}
+
+span {
+    border-bottom: 1px solid;
 }
 </style>
 <body>
     <pre>{{.}}</pre>
+    <p><small>upload data to <span>https://hexdu.mp/upload</span> &amp; get a hexdump</small><br>
+    <small>curl <span>https://hexdu.mp</span> &amp; get a plaintext shark fact</small></p>
 </body>
 </html>

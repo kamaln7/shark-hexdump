@@ -5,6 +5,7 @@ import (
 	"encoding/hex"
 	"flag"
 	"html/template"
+	"io"
 	"io/ioutil"
 	"log"
 	"math/rand"
@@ -51,11 +52,23 @@ func main() {
 	}
 
 	rand.Seed(time.Now().Unix())
-	http.HandleFunc("/", serveFact)
+	http.HandleFunc("/", routeRequest)
 	log.Println("starting shark-hexdump")
 	err = http.ListenAndServe(*addr, nil)
 	if err != nil {
 		log.Fatal(err)
+	}
+}
+
+func routeRequest(w http.ResponseWriter, r *http.Request) {
+	switch r.URL.Path {
+	case "/":
+		serveFact(w, r)
+	case "/upload":
+		dumpBody(w, r)
+	default:
+		w.WriteHeader(404)
+		io.WriteString(w, "not found")
 	}
 }
 
@@ -67,8 +80,22 @@ func serveFact(w http.ResponseWriter, r *http.Request) {
 	} else {
 		err := tmpl.Execute(w, string(fact))
 		if err != nil {
-			w.Write([]byte("error"))
+			w.WriteHeader(500)
+			io.WriteString(w, "internal server error")
 			log.Println(err)
 		}
+	}
+}
+
+func dumpBody(w http.ResponseWriter, r *http.Request) {
+	dumper := hex.Dumper(w)
+
+	defer dumper.Close()
+	_, err := io.Copy(dumper, r.Body)
+
+	if err != nil {
+		w.WriteHeader(500)
+		io.WriteString(w, "internal server error")
+		log.Println(err)
 	}
 }
